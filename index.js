@@ -30,7 +30,7 @@ app.get("/api/:date?", function (req, res) {
       "unix": unix,
       "utc": date.toUTCString()
     })
-  } else if ((/(100[0-9]|10[1-9][0-9]|1[1-9][0-9]{2}|[2-9][0-9]{3})-([1-9]|1[0-2])-([1-9]|[12][0-9]|3[01])/).test(inParam)) {
+  } else if ((/(197[0-9]|19[89][0-9]|[2-9][0-9]{3})-([1-9]|[12][0-9]|3[01])/).test(inParam)) {
     date = new Date(inParam);
     validDateCheck = date.getTime();
     if (isNaN(validDateCheck)) {
@@ -44,6 +44,16 @@ app.get("/api/:date?", function (req, res) {
           "utc": date.toUTCString()
         })
     }
+  } else if ((/([1-9]|[12][0-9]|3[01])\s\w+\s(197[0-9]|19[89][0-9]|[2-9][0-9]{3})/).test(inParam)) {
+    if (!((/GMT|UTC/).test(inParam))) {
+      inParam = `${inParam} 00:00:00 GMT`;
+    }
+    unix = Date.parse(inParam);
+    date = new Date(unix);
+    res.json({
+      "unix": unix,
+      "date": date.toUTCString()
+    })
   } else if (!(inParam)) {
     date = new Date();
     res.json({
