@@ -21,17 +21,17 @@ app.get("/", function (req, res) {
 
 // your first API endpoint... 
 app.get("/api/:date?", function (req, res) {
-  let inParam = req.params.date;
+  let date_string = req.params.date;
   let date, unix;
-  if ((/\d{13}/).test(inParam)) {
-    unix = parseInt(inParam);
+  if ((/\d{13}/).test(date_string)) {
+    unix = parseInt(date_string);
     date = new Date(unix);
     res.json({
       "unix": unix,
       "utc": date.toUTCString()
     })
-  } else if ((/(197[0-9]|19[89][0-9]|[2-9][0-9]{3})-([1-9]|[12][0-9]|3[01])/).test(inParam)) {
-    date = new Date(inParam);
+  } else if ((/(197[0-9]|19[89][0-9]|[2-9][0-9]{3})-([1-9]|[12][0-9]|3[01])/).test(date_string)) {
+    date = new Date(date_string);
     validDateCheck = date.getTime();
     if (isNaN(validDateCheck)) {
       res.json({
@@ -44,17 +44,17 @@ app.get("/api/:date?", function (req, res) {
           "utc": date.toUTCString()
         })
     }
-  } else if ((/([1-9]|[12][0-9]|3[01])\s\w+\s(197[0-9]|19[89][0-9]|[2-9][0-9]{3})/).test(inParam)) {
-    if (!((/GMT|UTC/).test(inParam))) {
-      inParam = `${inParam} 00:00:00 GMT`;
+  } else if ((/([1-9]|[12][0-9]|3[01])\s\w+\s(197[0-9]|19[89][0-9]|[2-9][0-9]{3})/).test(date_string)) {
+    if (!((/GMT|UTC/).test(date_string))) {
+      date_string = `${date_string} 00:00:00 GMT`;
     }
-    unix = Date.parse(inParam);
+    unix = Date.parse(date_string);
     date = new Date(unix);
     res.json({
       "unix": unix,
       "date": date.toUTCString()
     })
-  } else if (!(inParam)) {
+  } else if (!(date_string)) {
     date = new Date();
     res.json({
       "unix": date.getTime(),
